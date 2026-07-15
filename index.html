@@ -3,29 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#121212">
-    <title>Venezuela - Mochila de Emergencia</title>
+    <title>Venezuela Offline - Mochila</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
     <div class="app-container">
         <header>
-            <h1>🎒 Mi Mochila 72h</h1>
-            <p class="subtitle">Modo Offline Activo</p>
+            <h1>🎒 Venezuela Offline</h1>
+            <p class="subtitle">Mochila de Emergencia 72h</p>
         </header>
 
-        <section class="instructions">
-            <p>Marca los artículos que ya tienes listos en tu mochila física real. Tus cambios se guardarán automáticamente en este teléfono.</p>
-            <p class="offline-tip">Para usar esta app sin conexión: ábrela una vez con internet para que el navegador registre el Service Worker. Después podrás abrirla sin señal y seguir marcando/desmarcando.</p>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="cambiarPestaña('mochila')">Mi Mochila</button>
+            <button class="tab-btn" onclick="cambiarPestaña('compartir')">Sincronizar QR</button>
+        </div>
+
+        <section id="sec-mochila" class="tab-content active">
+            <div class="instructions">
+                <p>Marca lo que tienes en tu mochila real. Se guardará en este dispositivo de forma segura.</p>
+            </div>
+            <div id="items-container"></div>
         </section>
 
-        <main class="checklist">
-            <div id="items-container"></div>
-        </main>
+        <section id="sec-compartir" class="tab-content">
+            <div class="card-compartir">
+                <h3>🔄 Compartir mi Mochila</h3>
+                <p>Muestra este código QR a tu familiar para que sepa qué tienes en tu mochila.</p>
+                <div id="qrcode-container"></div>
+            </div>
+
+            <div class="card-compartir" style="margin-top: 20px;">
+                <h3>📷 Escanear Mochila de Familiar</h3>
+                <p>Escanea el QR del teléfono de tu familiar para ver sus insumos.</p>
+                <div id="reader" style="width: 100%;"></div>
+                <div id="resultado-escaneo" style="margin-top: 15px; font-weight: bold; color: var(--accent-color);"></div>
+            </div>
+        </section>
 
         <footer>
-            <p>Venezuela © 2026 - Proyecto de Emergencia Comunitaria</p>
+            <p>Proyecto Académico - Uso en Emergencias</p>
         </footer>
     </div>
 
