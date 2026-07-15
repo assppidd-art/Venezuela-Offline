@@ -116,3 +116,68 @@ footer {
     font-size: 0.8rem;
     color: var(--text-muted);
 }
+
+/* Pestañas de navegación */
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 50%;
+    border-radius: 6px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.tab-btn.active {
+    background-color: var(--accent-color);
+    color: #000;
+}
+
+/* Control de visibilidad de secciones */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.card-compartir {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.card-compartir h3 {
+    color: var(--accent-color);
+    margin-bottom: 10px;
+}
+
+.card-compartir p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 15px;
+}
+
+#qrcode-container {
+    display: flex;
+    justify-content: center;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    width: fit-content;
+    margin: 0 auto;
+}
