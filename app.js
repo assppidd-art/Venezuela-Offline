@@ -1,29 +1,38 @@
-// 1. Definimos los artículos indispensables para el bolso de emergencia
 const articulosIniciales = [
     { id: "agua", nombre: "Agua embotellada", desc: "Mínimo 2 litros por persona al día." },
     { id: "comida", nombre: "Comida enlatada", desc: "Atún, granos, etc. Que no requieran cocinarse." },
     { id: "linterna", nombre: "Linterna y pilas", desc: "Fundamental para cortes de luz nocturnos." },
     { id: "radio", nombre: "Radio portátil AM/FM", desc: "Para escuchar noticias oficiales sin internet." },
-    { id: "botiquin", nombre: "Botiquín de Primeros Auxilios", desc: "Alcohol, gasas, vendas y medicinas básicas." },
+    { id: "botiquin", nombre: "Botiquín de Primeros Auxilios", desc: "Alcohol, gasas, bandages y medicinas básicas." },
     { id: "silbato", nombre: "Silbato de emergencia", desc: "Para pedir ayuda en caso de quedar atrapado." },
     { id: "documentos", nombre: "Copia de documentos", desc: "Cédula, actas de nacimiento en bolsa impermeable." }
 ];
 
-// 2. Elemento del HTML donde meteremos los artículos
 const container = document.getElementById("items-container");
 
-// 3. Función para dibujar los artículos en la pantalla
+// Cambiar de pestaña (Mochila / Compartir)
+function cambiarPestaña(pestaña) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+    if (pestaña === 'mochila') {
+        document.getElementById('sec-mochila').classList.add('active');
+        event.currentTarget.classList.add('active');
+    } else {
+        document.getElementById('sec-compartir').classList.add('active');
+        event.currentTarget.classList.add('active');
+        generarCodigoQR();
+        iniciarEscaner();
+    }
+}
+
+// Dibujar lista
 function renderizarLista() {
-    container.innerHTML = ""; // Limpiamos la pantalla
-
+    container.innerHTML = "";
     articulosIniciales.forEach(articulo => {
-        // Buscamos si este artículo ya estaba marcado y guardado en el teléfono
         const estaMarcado = localStorage.getItem(articulo.id) === "true";
-
-        // Creamos la tarjeta del artículo
         const card = document.createElement("div");
         card.className = `item-card ${estaMarcado ? 'checked' : ''}`;
-
         card.innerHTML = `
             <div class="item-info">
                 <span class="item-name">${articulo.nombre}</span>
@@ -37,38 +46,73 @@ function renderizarLista() {
     });
 }
 
-// 4. Función para guardar la casilla marcada en el almacenamiento local del teléfono
 function guardarEstado(id) {
     const checkbox = document.getElementById(id);
-    
-    // Guardamos "true" o "false" en el almacenamiento local (LocalStorage)
     localStorage.setItem(id, checkbox.checked);
-    
-    // Volvemos a renderizar para actualizar el borde verde visual
     renderizarLista();
 }
 
-// 5. Iniciamos la app cargando la lista al abrir la página
+// GENERAR EL CÓDIGO QR CON LOS DATOS DE TU MOCHILA
+function generarCodigoQR() {
+    document.getElementById("qrcode-container").innerHTML = ""; // Limpiar QR anterior
+    
+    // Creamos una cadena de texto con lo que tenemos marcado
+    let datosMochila = "MochilaVO:";
+    articulosIniciales.forEach(art => {
+        const estado = localStorage.getItem(art.id) === "true" ? "1" : "0";
+        datosMochila += `${art.id}=${estado};`;
+    });
+
+    // Dibujamos el código QR en la pantalla
+    new QRCode(document.getElementById("qrcode-container"), {
+        text: datosMochila,
+        width: 180,
+        height: 180,
+        colorDark : "#000000",
+        colorLight : "#ffffff"
+    });
+}
+
+// INICIAR CÁMARA PARA ESCANEAR EL QR DEL FAMILIAR
+let html5QrcodeScanner;
+function iniciarEscaner() {
+    if (html5QrcodeScanner) return; // Evitar iniciar dos veces
+
+    html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+    html5QrcodeScanner.render((decodedText) => {
+        // Al detectar un código QR...
+        if (decodedText.startsWith("MochilaVO:")) {
+            html5QrcodeScanner.clear(); // Apagar la cámara
+            
+            // Procesamos los datos recibidos
+            const datos = decodedText.replace("MochilaVO:", "").split(";");
+            let resumen = "Mochila de tu familiar:<br><br>";
+            
+            datos.forEach(par => {
+                if(!par) return;
+                const [id, estado] = par.split("=");
+                const articulo = articulosIniciales.find(a => a.id === id);
+                if (articulo) {
+                    const tieneArticulo = estado === "1" ? "✅ Sí tiene" : "❌ No tiene";
+                    resumen += `• ${articulo.nombre}: <b>${tieneArticulo}</b><br>`;
+                }
+            });
+
+            document.getElementById("resultado-escaneo").innerHTML = resumen;
+        } else {
+            document.getElementById("resultado-escaneo").innerText = "Código QR no válido para Venezuela Offline";
+        }
+    });
+}
+
+// Iniciar aplicación
 renderizarLista();
 
-// 6. Mostramos el estado de conexión para saber si estamos offline
-const statusLabel = document.querySelector('.subtitle');
-function actualizarEstadoConexion() {
-    const offline = !navigator.onLine;
-    statusLabel.textContent = offline
-        ? 'Sin conexión — tus cambios se guardan localmente'
-        : 'Conexión disponible — sigue marcando tu mochila';
-    statusLabel.style.color = offline ? 'var(--accent-color)' : 'var(--success-color)';
-}
-window.addEventListener('online', actualizarEstadoConexion);
-window.addEventListener('offline', actualizarEstadoConexion);
-actualizarEstadoConexion();
-
-// Registrar el Service Worker si el navegador lo permite
+// Service Worker (Para que funcione offline)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('¡Service Worker registrado con éxito!', reg))
-            .catch(err => console.error('Error al registrar el Service Worker', err));
+            .then(reg => console.log('Service Worker registrado.', reg))
+            .catch(err => console.error('Error en Service Worker', err));
     });
 }
