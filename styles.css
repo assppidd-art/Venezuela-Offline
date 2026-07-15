@@ -1,0 +1,118 @@
+/* Paleta de colores de emergencia (Oscuro para ahorrar batería) */
+:root {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --accent-color: #ff9800; /* Naranja de alerta */
+    --text-color: #e0e0e0;
+    --text-muted: #a0a0a0;
+    --success-color: #4caf50;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 480px; /* Tamaño ideal de celular */
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+header {
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 2px solid var(--card-bg);
+}
+
+header h1 {
+    font-size: 1.8rem;
+    color: var(--accent-color);
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: var(--success-color);
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.instructions {
+    background-color: var(--card-bg);
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+    border-left: 4px solid var(--accent-color);
+}
+
+.instructions p {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: var(--text-muted);
+}
+
+.offline-tip {
+    margin-top: 10px;
+    color: #c0c0c0;
+    font-size: 0.85rem;
+}
+
+/* Estilos de la lista */
+.item-card {
+    background-color: var(--card-bg);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background-color 0.3s;
+}
+
+.item-card.checked {
+    border-left: 4px solid var(--success-color);
+}
+
+.item-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-name {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.item-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+/* El interruptor/checkbox moderno */
+.checkbox-container input {
+    width: 24px;
+    height: 24px;
+    accent-color: var(--success-color);
+    cursor: pointer;
+}
+
+footer {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#121212">
+    <title>Venezuela - Mochila de Emergencia</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>🎒 Mi Mochila 72h</h1>
+            <p class="subtitle">Modo Offline Activo</p>
+        </header>
+
+        <section class="instructions">
+            <p>Marca los artículos que ya tienes listos en tu mochila física real. Tus cambios se guardarán automáticamente en este teléfono.</p>
+            <p class="offline-tip">Para usar esta app sin conexión: ábrela una vez con internet para que el navegador registre el Service Worker. Después podrás abrirla sin señal y seguir marcando/desmarcando.</p>
+        </section>
+
+        <main class="checklist">
+            <div id="items-container"></div>
+        </main>
+
+        <footer>
+            <p>Venezuela © 2026 - Proyecto de Emergencia Comunitaria</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
